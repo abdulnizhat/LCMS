@@ -405,7 +405,6 @@ public partial class GaugePart : System.Web.UI.Page
     {
         DataTable dtpart = g.ReturnData("Select part_name,part_id,operation from partMaster_TB where part_id=" + Convert.ToInt32(partId) + "");
 
-
         if (dtpart.Rows.Count > 0)
         {
 

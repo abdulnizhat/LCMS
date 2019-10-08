@@ -170,7 +170,7 @@
                                     <asp:ListBox ID="ddlPartNumber" runat="server" SelectionMode="Multiple" TabIndex="2" OnSelectedIndexChanged="ddlPartNumber_SelectedIndexChanged" AutoPostBack="false" CssClass="form-control">
                                     </asp:ListBox>
                                     <asp:CompareValidator ID="CompareValidator2" runat="server" ControlToValidate="ddlPartNumber" Display="Dynamic" ForeColor="Maroon"
-                                        ErrorMessage="Select Part Number" SetFocusOnError="true" Operator="NotEqual" ValidationGroup="c" ValueToCompare="--Select--"></asp:CompareValidator>
+                                    ErrorMessage="Select Part Number" SetFocusOnError="true" Operator="NotEqual" ValidationGroup="c" ValueToCompare="--Select--"></asp:CompareValidator>
                                 </div>
                             </div>
                             <asp:Label ID="lblgaugePartLinkId" runat="server" Visible="false"></asp:Label>

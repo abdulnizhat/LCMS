@@ -426,7 +426,7 @@ public partial class CustomerMaster : System.Web.UI.Page
             lblCustomerId.Text = lnkEmpEdit.CommandArgument;
             DataTable dtcust = g.GetCustomerDetails(Convert.ToInt32(lblCustomerId.Text));
                 
-           txtcustomerId.Text = dtcust.Rows[0]["customer_id"].ToString();
+            txtcustomerId.Text = dtcust.Rows[0]["customer_id"].ToString();
             txtcustomerName.Text = dtcust.Rows[0]["customer_name"].ToString();
             ddlBranch.SelectedValue = dtcust.Rows[0]["branch_id"].ToString();
             ddlCountry.SelectedValue = dtcust.Rows[0]["country_id"].ToString();

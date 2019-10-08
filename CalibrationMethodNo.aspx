@@ -48,7 +48,7 @@
                                     <Columns>
                                         <%--<asp:BoundField DataField="id" HeaderText="IS Ref. Id" />--%>
                                         <asp:BoundField DataField="description" HeaderText="Description" />
-                                        <asp:BoundField DataField="revesion" HeaderText="Revise" />
+                                        <asp:BoundField DataField="revesion" HeaderText="Method Number" />
                                         <asp:BoundField DataField="revesion_date" HeaderText="Revise Date" />
                                         <asp:TemplateField HeaderText="Action" HeaderStyle-Width="75px">
                                             <ItemTemplate>
@@ -93,11 +93,11 @@
                     </div>
 
                     <div class="form-group">
-                        <asp:Label runat="server" CssClass="col-md-2 control-label">Revise<b style="color: Red">*</b></asp:Label>
+                        <asp:Label runat="server" CssClass="col-md-2 control-label">Method Number<b style="color: Red">*</b></asp:Label>
                         <div class="col-md-10">
                             <asp:TextBox runat="server" ID="txtRevise" CssClass="form-control" TabIndex="2" />
                             <asp:RequiredFieldValidator runat="server" ControlToValidate="txtRevise" SetFocusOnError="true"
-                                CssClass="text-danger" ErrorMessage="Revise field is required." ValidationGroup="a" />
+                                CssClass="text-danger" ErrorMessage="Method Number field is required." ValidationGroup="a" />
                         </div>
                     </div>
                     <div class="form-group">

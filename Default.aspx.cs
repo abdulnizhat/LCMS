@@ -14,23 +14,27 @@ public partial class Default : System.Web.UI.Page
     Genreal g = new Genreal();
     QueryClass q = new QueryClass();
     string stDate = null;
+    DisplaySerialNumber d = new DisplaySerialNumber();
     protected void Page_Load(object sender, EventArgs e)
     {
         if (Session["User_ID"] != null && Session["Customer_ID"] != null)
         {
+           
             if (!IsPostBack)
             {
-                displayDueStatus();
-                displayMsaDueStatus();
-                displayIssueReturnPending();
-                displayGraph();
-                sendMail();
+                //displayDueStatus();
+                //displayMsaDueStatus();
+                //displayIssueReturnPending();
+                //displayGraph();
+                //sendMail();
             }
         }
         else
         {
             Response.Redirect("Login.aspx");
         }
+
+        
     }
 
     private void sendMail()
@@ -60,12 +64,12 @@ public partial class Default : System.Web.UI.Page
                    
                     senderMailId = dtresultgetMailId.Rows[0]["email_id_from"].ToString(); 
                     password = dtresultgetMailId.Rows[0]["credential"].ToString(); 
-                        port = Convert.ToInt32( dtresultgetMailId.Rows[0]["port"].ToString());
-                        sendTo =dtresultgetMailId.Rows[0]["specified_emai_to_send"].ToString(); 
+                    port = Convert.ToInt32( dtresultgetMailId.Rows[0]["port"].ToString());
+                    sendTo =dtresultgetMailId.Rows[0]["specified_emai_to_send"].ToString(); 
                    
                         DataTable dtresultUserEmailId = g.ReturnData("Select email from employee_TB where employee_id ="+ Convert.ToInt32(Session["User_ID"])+"");
                    
-                        if (dtresultUserEmailId.Rows.Count>0)
+                    if (dtresultUserEmailId.Rows.Count>0)
                     {
                         string empmailid = null;
                        

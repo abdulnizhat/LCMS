@@ -1,16 +1,23 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/MasterPage.master" AutoEventWireup="true" CodeFile="IssueStatus.aspx.cs" Inherits="IssueStatus" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="Server">
+      <%-- For DDL--%>
+     <script type="text/javascript" src="js/searchabledropdown/jquery-1.9.1-jquery.min.js"></script>
+     <link href="js/searchabledropdown/3.3.7-css-bootstrap.min.css" rel="stylesheet" />
+     <script type="text/javascript" src="js/searchabledropdown/1.12.2-js-select.min.js"></script>
+     <link href="js/searchabledropdown/1.12.2-css-select.min.css" rel="stylesheet" />
+   
+    <%--For Calendar--%>
     <link rel="stylesheet" href="css/jquery-ui.css" type="text/css" media="all" />
     <link rel="stylesheet" href="css/ui.theme.css" type="text/css" media="all" />
     <script src="Scripts/jquery.min.js" type="text/javascript"></script>
     <script src="Scripts/jquery-ui.min.js" type="text/javascript"></script>
+
     <script type="text/javascript">
         $(function () {
             $("#<%= txtIssueDate.ClientID  %>").datepicker({ dateFormat: 'dd/mm/yy' });
             $("#<%= txtReturnDate.ClientID  %>").datepicker({ dateFormat: 'dd/mm/yy' });
         });
-
         function Confirm() {
             var chk = '<%=  Session["dleteIssuehLink"].ToString() %>';
             if (chk == "YES") {
@@ -24,9 +31,13 @@
                 }
                 document.forms[0].appendChild(confirm_value);
             }
-
         }
     </script>
+    <style>
+        .dropdownCustom{
+            width:280px !important;
+        }
+    </style>
     <h3><%: Title %>Issue Status</h3>
     <asp:MultiView ID="MultiView1" runat="server">
         <asp:View ID="View1" runat="server">
@@ -178,11 +189,16 @@
                             <div class="form-group">
                                 <asp:Label runat="server" CssClass="col-md-3 control-label">Issue Type<b style="color: Red">*</b></asp:Label>
                                 <div class="col-md-9">
-                                    <asp:DropDownList ID="ddlIssueType" TabIndex="4" runat="server" CssClass="form-control">
+                                    <asp:DropDownList ID="ddlIssueType" TabIndex="4" runat="server" class="selectpicker dropdownCustom" data-live-search-style="begins"
+                                    data-live-search="true">
+
                                         <asp:ListItem Value="0">--Select--</asp:ListItem>
                                         <asp:ListItem Value="1">For CALIBRATION</asp:ListItem>
                                         <asp:ListItem Value="2">For REPAIR</asp:ListItem>
                                         <asp:ListItem Value="3">For USED</asp:ListItem>
+                                         <asp:ListItem Value="3">BUSED</asp:ListItem>
+                                         <asp:ListItem Value="3">C USED</asp:ListItem>
+                                         <asp:ListItem Value="3">CC USED</asp:ListItem>
                                     </asp:DropDownList>
                                     <asp:CompareValidator ID="CompareValidator3" runat="server" ControlToValidate="ddlIssueType" Display="Dynamic" ForeColor="Maroon"
                                         ErrorMessage="Select Issue Type" SetFocusOnError="true" Operator="NotEqual" ValidationGroup="c" ValueToCompare="0"></asp:CompareValidator>

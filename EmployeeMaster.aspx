@@ -137,7 +137,7 @@
                                     <asp:Literal runat="server" ID="FailureText" />
                                 </p>
                             </asp:PlaceHolder>
-                            <div class="form-group">
+                            <div class="form-group" runat="server" visible="false">
                                 <asp:Label runat="server" CssClass="col-md-3 control-label">Is Supplier</asp:Label>
                                 <div class="col-md-9">
                                     <asp:RadioButtonList ID="rbtIsSupplier" runat="server"

@@ -14,10 +14,10 @@ public partial class GaugeMaster : System.Web.UI.Page
 {
     Genreal g = new Genreal();
     QueryClass q = new QueryClass();
-    string blob = "";
+    //string blob = "";
     string gaugeName = "";
     string gaugeSrNo = "";
-    byte[] imgByte = null;
+    //byte[] imgByte = null;
     protected void Page_Load(object sender, EventArgs e)
     {
         if (Session["User_ID"] != null && Session["Customer_ID"] != null)
@@ -29,12 +29,29 @@ public partial class GaugeMaster : System.Web.UI.Page
                 btnAddGauge.Focus();
                 MultiView1.ActiveViewIndex = 0;
                 bindGaugeGrid(Convert.ToInt32(Session["Customer_ID"]));
-
+                fillGaugeType();
             }
         }
         else
         {
             Response.Redirect("Login.aspx");
+        }
+
+    }
+    private void fillGaugeType()
+    {
+        try
+        {
+            DataTable dtFetchGaugeType = g.ReturnData("SELECT tm.id, concat_WS(':',sb.size_range,tm.type_of_gauge, sb.least_count) as gaugetype  FROM typemaster_tb tm Left Outer join subtypemaster_tb as sb ON tm.sub_type_id=sb.id");
+            ddlgaugeType.DataSource = dtFetchGaugeType;
+            ddlgaugeType.DataTextField = "gaugetype";
+            ddlgaugeType.DataValueField = "id";
+            ddlgaugeType.DataBind();
+            ddlgaugeType.Items.Insert(0, "--Select--");
+        }
+        catch (Exception ex)
+        {
+            g.ShowMessage(this.Page, ex.Message);
         }
     }
     private void checkAuthority()
@@ -80,8 +97,6 @@ public partial class GaugeMaster : System.Web.UI.Page
                     }
                 }
             }
-
-
         }
         catch (Exception ex)
         {
@@ -89,7 +104,6 @@ public partial class GaugeMaster : System.Web.UI.Page
             g.ShowMessage(this.Page, ex.Message);
         }
     }
-
     private void bindGaugeGrid(int custId)
     {
         try
@@ -100,7 +114,7 @@ public partial class GaugeMaster : System.Web.UI.Page
             DataTable dt = new DataTable();
             if (ddlsortby.SelectedItem.Text == "--Select--")
             {
-                DataSet ds = q.ProcdureWith8Param(stprocedure, 6, custId,0, "", "", "", "","");
+                DataSet ds = q.ProcdureWith8Param(stprocedure, 6, custId, 0, "", "", "", "", "");
                 dt = ds.Tables[0];
             }
             else if (ddlsortby.SelectedItem.Text == "Gauge Id-Wise")
@@ -113,15 +127,15 @@ public partial class GaugeMaster : System.Web.UI.Page
                 }
                 catch (Exception ex)
                 {
-                    
+
                     g.ShowMessage(this.Page, "Gauge Id is accept only numeric value. " + ex.Message);
                 }
-              
+
             }
             else if (ddlsortby.SelectedItem.Text == "Gauge Name-Wise")
             {
 
-                DataSet ds = q.ProcdureWith8Param(stprocedure, 7, custId, 0, searchValue, "", "", "","");
+                DataSet ds = q.ProcdureWith8Param(stprocedure, 7, custId, 0, searchValue, "", "", "", "");
                 dt = ds.Tables[0];
             }
             else if (ddlsortby.SelectedItem.Text == "Gauge Sr.No.-Wise")
@@ -131,7 +145,7 @@ public partial class GaugeMaster : System.Web.UI.Page
             }
             else if (ddlsortby.SelectedItem.Text == "Manufacture Id-Wise")
             {
-                DataSet ds = q.ProcdureWith8Param(stprocedure, 9, custId,0, "", "", searchValue, "","");
+                DataSet ds = q.ProcdureWith8Param(stprocedure, 9, custId, 0, "", "", searchValue, "", "");
                 dt = ds.Tables[0];
             }
             else if (ddlsortby.SelectedItem.Text == "Size/Range-Wise")
@@ -141,11 +155,11 @@ public partial class GaugeMaster : System.Web.UI.Page
             }
             else if (ddlsortby.SelectedItem.Text == "Gauge Type-Wise")
             {
-                DataSet ds = q.ProcdureWith8Param(stprocedure, 3, custId,0, "", "", "","", searchValue);
+                DataSet ds = q.ProcdureWith8Param(stprocedure, 3, custId, 0, "", "", "", "", searchValue);
                 dt = ds.Tables[0];
             }
 
-            grdGauge.DataSource = dt;            
+            grdGauge.DataSource = dt;
             grdGauge.DataBind();
 
             checkAuthority();
@@ -157,12 +171,8 @@ public partial class GaugeMaster : System.Web.UI.Page
     }
     protected void btnAddGauge_Click(object sender, EventArgs e)
     {
-
-        // ScriptManager.RegisterStartupScript(this.Page, this.GetType(), "script", "Confirm();", true);
-
-        txtGaugeName.Focus();
+        ddlType.Focus();
         MultiView1.ActiveViewIndex = 1;
-
         try
         {
             DataTable dtmax = g.ReturnData("Select MAX(gauge_id) from gaugeMaster_TB");
@@ -172,7 +182,6 @@ public partial class GaugeMaster : System.Web.UI.Page
         }
         catch (Exception)
         {
-
             txtGaugeId.Text = "1";
         }
 
@@ -185,122 +194,105 @@ public partial class GaugeMaster : System.Web.UI.Page
         gaugeSrNo = txtGaugeSrNo.Text.Trim();
         gaugeSrNo = Regex.Replace(gaugeSrNo, @"\s+", " ");
         MultiView1.ActiveViewIndex = 1;
-
         try
         {
-           
             #region File Upload
-            FileUpload img = (FileUpload)UploadDrwainfFile;
-            if (img.HasFile && img.PostedFile != null)
+            //FileUpload img = (FileUpload)UploadDrwainfFile;
+            //if (img.HasFile && img.PostedFile != null)
+            //{
+            //    imgByte = null;
+            //    //To create a PostedFile
+            //    HttpPostedFile File = UploadDrwainfFile.PostedFile;
+            //    txtImageName.Text = File.FileName;
+            //    string filePath = UploadDrwainfFile.PostedFile.FileName;
+            //    string filename = Path.GetFileName(filePath);
+            //    string ext = Path.GetExtension(filename);
+            //    long fileSize = UploadDrwainfFile.FileContent.Length;
+            //    if (fileSize <= 1024000) // Check in byte 1024000 Byte =1.024 MB . 1 MB.
+            //    {
+            //        string contenttype = String.Empty;
+            //        switch (ext)
+            //        {
+            //            case ".jpeg":
+            //                contenttype = "image/jpeg";
+            //                break;
+            //            case ".jpg":
+            //                contenttype = "image/jpg";
+            //                break;
+            //            case ".png":
+            //                contenttype = "image/png";
+            //                break;
+            //            case ".gif":
+            //                contenttype = "image/gif";
+            //                break;
+            //            case ".pdf":
+            //                contenttype = "application/pdf";
+            //                break;
+            //            case ".bmp":
+            //                contenttype = "image/bmp";
+            //                break;
+            //        }
+            //        if (contenttype != String.Empty)
+            //        {
+            //            Stream stream = File.InputStream;
+            //            BinaryReader bReader = new BinaryReader(stream);
+            //            imgByte = bReader.ReadBytes((int)stream.Length);
+            //            //Create byte Array with file len
+            //            // imgByte = new Byte[File.ContentLength];
+            //            //force the control to load data in array
+            //            // File.InputStream.Read(imgByte, 0, File.ContentLength);
+            //        }
+            //        else
+            //        {
+            //            g.ShowMessage(this.Page, "File type is not valid.");
+            //            return;
+            //        }
+            //    }
+            //    else
+            //    {
+            //        g.ShowMessage(this.Page, "Selected file size is exceeds the size limit 1 MB only.");
+            //        return;
+            //    }
+
+            //}
+            #endregion
+
+
+            if (btnSaveGauge.Text == "Save")
             {
-                imgByte = null;
-                //To create a PostedFile
-                HttpPostedFile File = UploadDrwainfFile.PostedFile;
-                txtImageName.Text = File.FileName;
-                string filePath = UploadDrwainfFile.PostedFile.FileName;
-                string filename = Path.GetFileName(filePath);
-                string ext = Path.GetExtension(filename);
-                long fileSize = UploadDrwainfFile.FileContent.Length;
-                if (fileSize <= 1024000) // Check in byte 1024000 Byte =1.024 MB . 1 MB.
+                DataTable dtexist = g.ReturnData("Select gauge_sr_no from gaugeMaster_TB where gauge_sr_no='" + gaugeSrNo + "' and customer_id=" + Convert.ToInt32(Session["Customer_ID"]) + "");
+                if (dtexist.Rows.Count > 0)
                 {
-                    string contenttype = String.Empty;
-                    switch (ext)
-                    {
-                        case ".jpeg":
-                            contenttype = "image/jpeg";
-                            break;
-                        case ".jpg":
-                            contenttype = "image/jpg";
-                            break;
-                        case ".png":
-                            contenttype = "image/png";
-                            break;
-                        case ".gif":
-                            contenttype = "image/gif";
-                            break;
-                        case ".pdf":
-                            contenttype = "application/pdf";
-                            break;
-                        case ".bmp":
-                            contenttype = "image/bmp";
-                            break;
-                    }
-                    if (contenttype != String.Empty)
-                    {
-                        Stream stream = File.InputStream;
-                        BinaryReader bReader = new BinaryReader(stream);
-                        imgByte = bReader.ReadBytes((int)stream.Length);
-                        //Create byte Array with file len
-                       // imgByte = new Byte[File.ContentLength];
-                        //force the control to load data in array
-                       // File.InputStream.Read(imgByte, 0, File.ContentLength);
-                    }
-                    else
-                    {
-                        g.ShowMessage(this.Page, "File type is not valid.");
-                        return;
-                    }
+                    g.ShowMessage(this.Page, "Gauge serial number is already exist.");
+                    return;
                 }
                 else
                 {
-                    g.ShowMessage(this.Page, "Selected file size is exceeds the size limit 1 MB only.");
-                    return;
+                    saveUpdateGauge(0);
                 }
-
             }
-            #endregion
-
-         
-
-          
-          
-           
-            if (btnSaveGauge.Text == "Save")
+            else
             {
-
-                DataTable dtexist = g.ReturnData("Select gauge_sr_no from gaugeMaster_TB where gauge_sr_no='" + gaugeSrNo + "' and customer_id=" + Convert.ToInt32(Session["Customer_ID"]) + "");
-                    
-                    if (dtexist.Rows.Count > 0)
+                int updateGaugeId = Convert.ToInt32(lblGaugeId.Text);
+                DataTable dtexist = g.ReturnData("Select gauge_sr_no from gaugeMaster_TB where gauge_sr_no='" + gaugeSrNo + "' and customer_id=" + Convert.ToInt32(Session["Customer_ID"]) + " and gauge_id=" + updateGaugeId + "");
+                if (dtexist.Rows.Count > 0)
+                {
+                    saveUpdateGauge(updateGaugeId);
+                }
+                else
+                {
+                    DataTable dtexist1 = g.ReturnData("Select gauge_sr_no from gaugeMaster_TB where gauge_sr_no='" + gaugeSrNo + "' and customer_id=" + Convert.ToInt32(Session["Customer_ID"]) + " and gauge_id<>" + updateGaugeId + "");
+                    if (dtexist1.Rows.Count > 0)
                     {
                         g.ShowMessage(this.Page, "Gauge serial number is already exist.");
                         return;
                     }
                     else
                     {
-                        saveUpdateGauge(0);
-                    }
-                   
-                
-            }
-            else
-            {
-                int updateGaugeId = Convert.ToInt32(lblGaugeId.Text);
-                DataTable dtexist = g.ReturnData("Select gauge_sr_no from gaugeMaster_TB where gauge_sr_no='" + gaugeSrNo + "' and customer_id=" + Convert.ToInt32(Session["Customer_ID"]) + " and gauge_id=" + updateGaugeId + "");
-                    
-                    if (dtexist.Rows.Count > 0)
-                    {
                         saveUpdateGauge(updateGaugeId);
                     }
-                    else
-                    {
-                        DataTable dtexist1 = g.ReturnData("Select gauge_sr_no from gaugeMaster_TB where gauge_sr_no='" + gaugeSrNo + "' and customer_id=" + Convert.ToInt32(Session["Customer_ID"]) + " and gauge_id<>" + updateGaugeId + "");
-                        
-                        if (dtexist1.Rows.Count > 0)
-                        {
-                            g.ShowMessage(this.Page, "Gauge serial number is already exist.");
-                            return;
-                        }
-                        else
-                        {
-                            saveUpdateGauge(updateGaugeId);
-                        }
-                    }
-                  
-
                 }
-
-          
-
+            }
         }
         catch (Exception ex)
         {
@@ -314,53 +306,51 @@ public partial class GaugeMaster : System.Web.UI.Page
     {
         try
         {
-            string stsize="";
-                if (ddlType.SelectedIndex == 1)
-                {
-                   stsize = txtSize.Text;
-                }
-                else if (ddlType.SelectedIndex == 2)
-                {
-                   stsize = txtRange.Text;
-                } 
-            DateTime purchaseDate = DateTime.ParseExact(txtPurchaseDate.Text, "dd/MM/yyyy", CultureInfo.InvariantCulture);
-            string purchaseDate1=purchaseDate.ToString("yyyy-MM-dd H:mm:ss"); 
-             DateTime retairmentDate = DateTime.ParseExact(txtRetairementDate.Text, "dd/MM/yyyy", CultureInfo.InvariantCulture);
-            string retairmentDate1=retairmentDate.ToString("yyyy-MM-dd H:mm:ss"); 
-            DateTime serviceDate = DateTime.ParseExact(txtServiceDate.Text, "dd/MM/yyyy", CultureInfo.InvariantCulture);
-            string serviceDate1=serviceDate.ToString("yyyy-MM-dd H:mm:ss"); 
-                if (btnSaveGauge.Text == "Save")
-                {
+            long id = 0;
+            string stsize = "";
+            string toleranceType = "";
+            int tolId = 0;
+            if (!string.IsNullOrEmpty(hftoleranceId.Value.ToString()))
+            {
+                tolId = Convert.ToInt32(hftoleranceId.Value);
+            }
+            string strGrade = "";
+            if (!string.IsNullOrEmpty(hfGrade.Value.ToString()))
+            {
+                strGrade = hfGrade.Value;
+                strGrade = strGrade.Replace("grd", "grd_");
+            }
+            if (ddlTolerance.SelectedIndex > 0)
+            {
+                toleranceType = ddlTolerance.SelectedItem.Text;
+            }
+            if (ddlType.SelectedIndex == 1)
+            {
+                stsize = txtSize.Text;
+            }
+            else if (ddlType.SelectedIndex == 2)
+            {
+                stsize = txtRange.Text;
+            }
 
-                    string stquery = "Insert into gaugeMaster_TB (customer_id,cycles,status,created_by_id,gauge_name,gauge_sr_no,gauge_Manufature_Id,current_location,gauge_type,go_tollerance_plus,go_tollerance_minus,go_were_limit,least_count,no_go_tollerance_plus,no_go_tollerance_minus,permisable_error1,permisable_error2,purchase_cost,purchase_date,retairment_date,service_date,resolution,size_range,store_location,drawing_name,drawing_file) VALUES(?param1,?param2,?param3,?param4,?param5,?param6,?param7,?param8,?param9,?param10,?param11,?param12,?param13,?param14,?param15,?param16,?param17,?param18,?param19,?param20,?param21,?param22,?param23,?param24,?param25,?param26)";
-                    //Note :  customer_id= param1,cycles=param2,  status=param3,created_by_id= param4,gauge_name=param5, gauge_sr_no=param6, gauge_Manufature_Id=param7, current_location=param8, gauge_type=param9, go_tollerance_plus=param10,go_tollerance_minus=param11, go_were_limit=param12,least_count=param13, no_go_tollerance_plus=param14, no_go_tollerance_minus=param15,permisable_error1=param16,permisable_error2=param17, purchase_cost=param18, purchase_date=param19,retairment_date=param20, service_date=param21, resolution=param22,size_range= param23, store_location=param24,drawing_name=param25, drawing_file= param26
-                    g.savewith27param(stquery, Convert.ToInt32(Session["Customer_ID"]) , 0 ,"1", Convert.ToInt32(Session["User_ID"]) ,gaugeName,gaugeSrNo,txtManufactureId.Text,txtCurrentLocation.Text, ddlType.SelectedItem.Text, txtGoTollerancePlus.Text,txtGoTolleranceMinus.Text,txtGoWereLimit.Text,txtLeastCount.Text,txtNoGoTollerancePlus.Text,txtNoGoTolleranceMinus.Text,txtPermisableError1.Text,txtPermisableError2.Text, Convert.ToDecimal(txtPurchaseCost.Text), purchaseDate1,retairmentDate1,serviceDate1,txtResolution.Text,stsize,txtStoreLocation.Text,txtImageName.Text,imgByte);
-                    
-                    //DataTable dtsave = g.ReturnData("Insert into gaugeMaster_TB (customer_id,cycles,status,created_by_id,gauge_name,gauge_sr_no,gauge_Manufature_Id,current_location,gauge_type,go_tollerance_plus,go_tollerance_minus,go_were_limit,least_count,no_go_tollerance_plus,no_go_tollerance_minus,permisable_error1,permisable_error2,purchase_cost,purchase_date,retairment_date,service_date,resolution,size_range,store_location,drawing_name,drawing_file) Values(" + Convert.ToInt32(Session["Customer_ID"]) + "," + 0 + ",True," + Convert.ToInt32(Session["User_ID"]) + ", '"+gaugeName+"', '"+gaugeSrNo+"','"+txtManufactureId.Text+"','"+txtCurrentLocation.Text+"', '"+ddlType.SelectedItem.Text+"','"+ txtGoTollerancePlus.Text+"', '"+txtGoTolleranceMinus.Text+"','"+txtGoWereLimit.Text+"','"+txtLeastCount.Text+"','"+txtNoGoTollerancePlus.Text+"','"+txtNoGoTolleranceMinus.Text+"','"+txtPermisableError1.Text+"','"+txtPermisableError2.Text+"', "+ Convert.ToDecimal(txtPurchaseCost.Text)+",'"+ purchaseDate1+"','"+retairmentDate1+"','"+serviceDate1+"','"+txtResolution.Text+"','"+stsize+"','"+txtStoreLocation.Text+"','"+txtImageName.Text+"','"+imgByte+"')");
-                    g.ShowMessage(this.Page, "Gauge data is saved successfully.");
-        
-                    
-                }
-                else
+            if (btnSaveGauge.Text == "Save")
+            {
+                string stquery = "Insert into gaugeMaster_TB (customer_id,cycles,status,created_by_id,gauge_name,gauge_sr_no,gauge_Manufature_Id,gauge_type, go_tollerance_plus,go_tollerance_minus,go_were_limit,least_count,no_go_tollerance_plus,no_go_tollerance_minus,permisable_error1,permisable_error2,resolution,size_range,make,gauge_type_master_id,size2,tolerance_type,tolerance_id,tolerance_grd,tolerance_desc) VALUES(?param1,?param2,?param3,?param4,?param5,?param6,?param7,?param8,?param9,?param10,?param11,?param12,?param13,?param14,?param15,?param16,?param17,?param18,?param19,?param20,?param21,?param22,?param23,?param24,?param25)";
+                id = g.saveGaugeMasterwith18param(stquery, Convert.ToInt32(Session["Customer_ID"]), 0, "1", Convert.ToInt32(Session["User_ID"]), gaugeName, gaugeSrNo, txtManufactureId.Text, ddlType.SelectedItem.Text, txtGoTollerancePlus.Text, txtGoTolleranceMinus.Text, txtGoWereLimit.Text, txtLeastCount.Text, txtNoGoTollerancePlus.Text, txtNoGoTolleranceMinus.Text, txtPermisableError1.Text, txtPermisableError2.Text, txtResolution.Text, stsize, txtmake.Text, Convert.ToInt32(ddlgaugeType.SelectedValue), txtSizeMax.Text, toleranceType, tolId, strGrade, txtToleranceRange.Text);
+                if (id != 0)
                 {
-                    DataTable dtfetch = g.ReturnData("Select drawing_file from gaugeMaster_TB where gauge_id=" + updateGaugeId + "");
-                    string stfile = "";
-                    stfile = dtfetch.Rows[0]["drawing_file"].ToString();
-                    if (stfile!="")
-                    {
-                        if (imgByte == null)
-                        {
-                            imgByte=(Byte[])dtfetch.Rows[0]["drawing_file"];
-                        } 
-                    }
-                                                                                                                                                                                                                                                                                                                                                                                                                                            
-                    string stquery = "Update gaugeMaster_TB set customer_id=?param1 ,cycles=?param2,status=?param3,created_by_id=?param4,gauge_name=?param5,gauge_sr_no=?param6,gauge_Manufature_Id=?param7,current_location=?param8,gauge_type=?param9,go_tollerance_plus=?param10,go_tollerance_minus=?param11, go_were_limit=?param12,least_count=?param13,no_go_tollerance_plus=?param14, no_go_tollerance_minus=?param15,permisable_error1=?param16,permisable_error2=?param17,purchase_cost=?param18, purchase_date=?param19,retairment_date=?param20,service_date=?param21,  resolution=?param22,size_range=?param23,  store_location=?param24,drawing_name=?param25,drawing_file=?param26  where gauge_id=" + updateGaugeId + "";
-                    g.savewith27param(stquery, Convert.ToInt32(Session["Customer_ID"]), 0, "1", Convert.ToInt32(Session["User_ID"]), gaugeName, gaugeSrNo, txtManufactureId.Text, txtCurrentLocation.Text, ddlType.SelectedItem.Text, txtGoTollerancePlus.Text, txtGoTolleranceMinus.Text, txtGoWereLimit.Text, txtLeastCount.Text, txtNoGoTollerancePlus.Text, txtNoGoTolleranceMinus.Text, txtPermisableError1.Text, txtPermisableError2.Text, Convert.ToDecimal(txtPurchaseCost.Text), purchaseDate1, retairmentDate1, serviceDate1, txtResolution.Text, stsize, txtStoreLocation.Text, txtImageName.Text, imgByte);
-                   // DataTable dtupdate = g.ReturnData("Update gaugeMaster_TB set customer_id=" + Convert.ToInt32(Session["Customer_ID"]) + " ,cycles=" + 0 + ",status=True,created_by_id=" + Convert.ToInt32(Session["User_ID"]) + ",gauge_name='" + gaugeName + "',  gauge_sr_no='" + gaugeSrNo + "',gauge_Manufature_Id='" + txtManufactureId.Text + "',current_location='" + txtCurrentLocation.Text + "', gauge_type='" + ddlType.SelectedItem.Text + "',go_tollerance_plus='" + txtGoTollerancePlus.Text + "',go_tollerance_minus='" + txtGoTolleranceMinus.Text + "', go_were_limit='" + txtGoWereLimit.Text + "',least_count='" + txtLeastCount.Text + "',no_go_tollerance_plus='" + txtNoGoTollerancePlus.Text + "', no_go_tollerance_minus='" + txtNoGoTolleranceMinus.Text + "',permisable_error1='" + txtPermisableError1.Text + "',  permisable_error2='" + txtPermisableError2.Text + "',purchase_cost='" + Convert.ToDecimal(txtPurchaseCost.Text) + "', purchase_date='" + purchaseDate1 + "',retairment_date='" + retairmentDate1 + "',service_date='" + serviceDate1 + "',  resolution='" + txtResolution.Text + "',size_range='" + stsize + "',  store_location='" + txtStoreLocation.Text + "',drawing_name='" + txtImageName.Text + "',drawing_file='" + imgByte + "'  where gauge_id=" + updateGaugeId + "");
-                    
-                    g.ShowMessage(this.Page, "Gauge data is updated successfully.");
+                    g.ShowMessage(this.Page, "Gauge data is saved successfully.");
                 }
-            
+            }
+            else
+            {
+                string stquery = "Update gaugeMaster_TB set customer_id=?param1 ,cycles=?param2,status=?param3,created_by_id=?param4,gauge_name=?param5,gauge_sr_no=?param6,gauge_Manufature_Id=?param7,gauge_type=?param8,go_tollerance_plus=?param9,go_tollerance_minus=?param10, go_were_limit=?param11,least_count=?param12,no_go_tollerance_plus=?param13, no_go_tollerance_minus=?param14,permisable_error1=?param15,permisable_error2=?param16, resolution=?param17,size_range=?param18, make=?param19, gauge_type_master_id=?param20, size2=?param21, tolerance_type=?param22, tolerance_id=?param23, tolerance_grd=?param24, tolerance_desc=?param25  where gauge_id=" + updateGaugeId + "";
+                id = g.saveGaugeMasterwith18param(stquery, Convert.ToInt32(Session["Customer_ID"]), 0, "1", Convert.ToInt32(Session["User_ID"]), gaugeName, gaugeSrNo, txtManufactureId.Text, ddlType.SelectedItem.Text, txtGoTollerancePlus.Text, txtGoTolleranceMinus.Text, txtGoWereLimit.Text, txtLeastCount.Text, txtNoGoTollerancePlus.Text, txtNoGoTolleranceMinus.Text, txtPermisableError1.Text, txtPermisableError2.Text, txtResolution.Text, stsize, txtmake.Text, Convert.ToInt32(ddlgaugeType.SelectedValue), txtSizeMax.Text, toleranceType, tolId, strGrade,txtToleranceRange.Text);
+                //if (id != 0)
+                //{
+                    g.ShowMessage(this.Page, "Gauge data is updated successfully.");
+                //}
+            }
         }
         catch (Exception ex)
         {
@@ -389,14 +379,9 @@ public partial class GaugeMaster : System.Web.UI.Page
         txtNoGoTolleranceMinus.Text = "";
         txtLeastCount.Text = "";
         txtResolution.Text = "";
-        txtStoreLocation.Text = "";
-        txtCurrentLocation.Text = "";
-        txtPurchaseCost.Text = "";
-        txtPurchaseDate.Text = "";
-        txtServiceDate.Text = "";
-        txtRetairementDate.Text = "";
         txtPermisableError1.Text = "";
         txtPermisableError2.Text = "";
+        txtmake.Text = "";
         divSize.Visible = true;
         divRange.Visible = false;
         divLeastCount.Visible = true;
@@ -406,7 +391,6 @@ public partial class GaugeMaster : System.Web.UI.Page
         divPermisable1.Visible = true;
         divPermisable2.Visible = true;
         divGoWereLimit.Visible = true;
-        txtImageName.Text = "";
         btnSaveGauge.Text = "Save";
     }
     protected void ddlType_SelectedIndexChanged(object sender, EventArgs e)
@@ -460,65 +444,74 @@ public partial class GaugeMaster : System.Web.UI.Page
             LinkButton lnk = (LinkButton)sender;
             lblGaugeId.Text = lnk.CommandArgument;
             string stprocedure = "spGaugeDetailsReport";
-            DataSet ds = q.ProcdureWith3Param(stprocedure,2,0,Convert.ToInt32(lblGaugeId.Text));
+            DataSet ds = q.ProcdureWith3Param(stprocedure, 2, 0, Convert.ToInt32(lblGaugeId.Text));
             DataTable dtgauge = ds.Tables[0];
             txtGaugeId.Text = dtgauge.Rows[0]["gauge_id"].ToString();
             txtGaugeName.Text = dtgauge.Rows[0]["gauge_name"].ToString();
             txtGaugeSrNo.Text = dtgauge.Rows[0]["gauge_sr_no"].ToString();
-                txtManufactureId.Text =dtgauge.Rows[0]["gauge_Manufature_Id"].ToString();
-
-                if (dtgauge.Rows[0]["gauge_type"].ToString() == "ATTRIBUTE")
+            txtManufactureId.Text = dtgauge.Rows[0]["gauge_Manufature_Id"].ToString();
+            txtmake.Text = dtgauge.Rows[0]["make"].ToString();
+            ddlgaugeType.SelectedValue = dtgauge.Rows[0]["gauge_type_master_id"].ToString();
+            if (dtgauge.Rows[0]["gauge_type"].ToString() == "ATTRIBUTE")
+            {
+                ddlType.SelectedIndex = 1;
+                divSize.Visible = true;
+                divRange.Visible = false;
+                divLeastCount.Visible = false;
+                divResolution.Visible = false;
+                divGoandNoGoPlus.Visible = true;
+                divGoandNoGoTolleranceminus.Visible = true;
+                divPermisable1.Visible = false;
+                divPermisable2.Visible = false;
+                divGoWereLimit.Visible = true;
+                txtSize.Text = dtgauge.Rows[0]["size_range"].ToString();
+                string tolType = dtgauge.Rows[0]["tolerance_type"].ToString();
+                if (tolType=="Plug Tolerance")
                 {
-                    ddlType.SelectedIndex = 1;
-                    divSize.Visible = true;
-                    divRange.Visible = false;
-                    divLeastCount.Visible = false;
-                    divResolution.Visible = false;
-                    divGoandNoGoPlus.Visible = true;
-                    divGoandNoGoTolleranceminus.Visible = true;
-                    divPermisable1.Visible = false;
-                    divPermisable2.Visible = false;
-                    divGoWereLimit.Visible = true;
-                    txtSize.Text =dtgauge.Rows[0]["size_range"].ToString();
+                    ddlTolerance.SelectedIndex = 1;
                 }
-                else if (dtgauge.Rows[0]["gauge_type"].ToString() == "VARIABLE")
+                else if (tolType=="Snap Tolerance")
                 {
-                    ddlType.SelectedIndex = 2;
-                    divSize.Visible = false;
-                    divRange.Visible = true;
-                    divLeastCount.Visible = true;
-                    divResolution.Visible = true;
-                    divGoandNoGoPlus.Visible = false;
-                    divGoandNoGoTolleranceminus.Visible = false;
-                    divPermisable1.Visible = true;
-                    divPermisable2.Visible = true;
-                    divGoWereLimit.Visible = false;
-                    txtRange.Text = dtgauge.Rows[0]["size_range"].ToString();
+                    ddlTolerance.SelectedIndex = 2;
                 }
-                txtGoWereLimit.Text = dtgauge.Rows[0]["go_were_limit"].ToString(); 
-                txtGoTollerancePlus.Text = dtgauge.Rows[0]["go_tollerance_plus"].ToString(); 
-                txtGoTolleranceMinus.Text = dtgauge.Rows[0]["go_tollerance_minus"].ToString();
-                txtNoGoTollerancePlus.Text = dtgauge.Rows[0]["no_go_tollerance_plus"].ToString(); 
-                txtNoGoTolleranceMinus.Text = dtgauge.Rows[0]["no_go_tollerance_minus"].ToString();
-                txtLeastCount.Text = dtgauge.Rows[0]["least_count"].ToString(); 
-                txtResolution.Text = dtgauge.Rows[0]["resolution"].ToString();
-                txtStoreLocation.Text = dtgauge.Rows[0]["store_location"].ToString(); 
-                txtCurrentLocation.Text = dtgauge.Rows[0]["current_location"].ToString(); 
-                txtPurchaseCost.Text = dtgauge.Rows[0]["purchase_cost"].ToString();
-                             
-                txtPurchaseDate.Text =dtgauge.Rows[0]["purchase_date"].ToString();
+                else
+                {
+                    ddlTolerance.SelectedIndex = 0;
+                }
+                txtSizeMax.Text = dtgauge.Rows[0]["size2"].ToString();
+                txtToleranceRange.Text = dtgauge.Rows[0]["tolerance_desc"].ToString();
+                hftoleranceId.Value = dtgauge.Rows[0]["tolerance_id"].ToString();
+                string grade = dtgauge.Rows[0]["tolerance_grd"].ToString();
+                grade=grade.Replace("grd_","grd");
+                hfGrade.Value = grade;
 
-              
-                txtServiceDate.Text = dtgauge.Rows[0]["service_date"].ToString();
 
-               
-                txtRetairementDate.Text = dtgauge.Rows[0]["retairment_date"].ToString();
-                txtPermisableError1.Text = dtgauge.Rows[0]["permisable_error1"].ToString();
-                txtPermisableError2.Text = dtgauge.Rows[0]["permisable_error2"].ToString(); 
-                txtImageName.Text = dtgauge.Rows[0]["drawing_name"].ToString(); 
-                MultiView1.ActiveViewIndex = 1;
-                btnSaveGauge.Text = "Update";
-            
+            }
+            else if (dtgauge.Rows[0]["gauge_type"].ToString() == "VARIABLE")
+            {
+                ddlType.SelectedIndex = 2;
+                divSize.Visible = false;
+                divRange.Visible = true;
+                divLeastCount.Visible = true;
+                divResolution.Visible = true;
+                divGoandNoGoPlus.Visible = false;
+                divGoandNoGoTolleranceminus.Visible = false;
+                divPermisable1.Visible = true;
+                divPermisable2.Visible = true;
+                divGoWereLimit.Visible = false;
+                txtRange.Text = dtgauge.Rows[0]["size_range"].ToString();
+            }
+            txtGoWereLimit.Text = dtgauge.Rows[0]["go_were_limit"].ToString();
+            txtGoTollerancePlus.Text = dtgauge.Rows[0]["go_tollerance_plus"].ToString();
+            txtGoTolleranceMinus.Text = dtgauge.Rows[0]["go_tollerance_minus"].ToString();
+            txtNoGoTollerancePlus.Text = dtgauge.Rows[0]["no_go_tollerance_plus"].ToString();
+            txtNoGoTolleranceMinus.Text = dtgauge.Rows[0]["no_go_tollerance_minus"].ToString();
+            txtLeastCount.Text = dtgauge.Rows[0]["least_count"].ToString();
+            txtResolution.Text = dtgauge.Rows[0]["resolution"].ToString();
+            txtPermisableError1.Text = dtgauge.Rows[0]["permisable_error1"].ToString();
+            txtPermisableError2.Text = dtgauge.Rows[0]["permisable_error2"].ToString();
+            MultiView1.ActiveViewIndex = 1;
+            btnSaveGauge.Text = "Update";
         }
         catch (Exception ex)
         {
@@ -548,7 +541,6 @@ public partial class GaugeMaster : System.Web.UI.Page
                     g.ShowMessage(this.Page, "There is no file.");
                     return;
                 }
-                
                 byte[] bytes = (byte[])(dt.Rows[0]["drawing_file"]);
                 Response.Clear();
                 Response.Buffer = true;
@@ -560,7 +552,6 @@ public partial class GaugeMaster : System.Web.UI.Page
                 Response.BinaryWrite(bytes);
                 Response.Flush();
                 Response.SuppressContent = true;
-                
             }
             else
             {
@@ -592,12 +583,12 @@ public partial class GaugeMaster : System.Web.UI.Page
             lblName.Visible = false;
 
         }
-          if (ddlsortby.SelectedItem.Text == "Gauge Id-Wise")
+        if (ddlsortby.SelectedItem.Text == "Gauge Id-Wise")
         {
             lblName.Text = "Gauge Id";
             searchBy.Text = "gt.gauge_id";
         }
-          else if (ddlsortby.SelectedItem.Text == "Gauge Name-Wise")
+        else if (ddlsortby.SelectedItem.Text == "Gauge Name-Wise")
         {
             lblName.Text = "Gauge Name";
             searchBy.Text = "gt.gauge_name";
@@ -607,7 +598,6 @@ public partial class GaugeMaster : System.Web.UI.Page
             lblName.Text = "Gauge Sr.No.";
             searchBy.Text = "gt.gauge_sr_no";
         }
-       
         else if (ddlsortby.SelectedItem.Text == "Manufacture Id-Wise")
         {
             lblName.Text = "Manufacture Id";
@@ -626,17 +616,15 @@ public partial class GaugeMaster : System.Web.UI.Page
         else if (ddlsortby.SelectedItem.Text == "--Select--")
         {
             bindGaugeGrid(Convert.ToInt32(Session["Customer_ID"]));
-           
+
         }
     }
-
-
     protected void btnSearch_Click(object sender, EventArgs e)
     {
         try
         {
             bindGaugeGrid(Convert.ToInt32(Session["Customer_ID"]));
-           
+
         }
         catch (Exception ex)
         {
@@ -644,7 +632,118 @@ public partial class GaugeMaster : System.Web.UI.Page
             g.ShowMessage(this.Page, "Some error found. " + ex.Message);
         }
     }
+    protected void btnShowPopup_Click(object sender, EventArgs e)
+    {
+        try
+        {
+            string lSize = txtSize.Text;
+            string hSize = txtSizeMax.Text;
+            if (ddlTolerance.SelectedIndex > 0 && !string.IsNullOrEmpty(lSize) && !string.IsNullOrEmpty(hSize))
+            {
+                fetchToleranceData(ddlTolerance.SelectedItem.Text);
+                tblleaddetails.Visible = true;
+                ModalPopupExtenderTolerance.Show();
+            }
+            else
+            {
+                g.ShowMessage(this.Page, "Before Select Tolerance Type, Lower Size and Heigher Size");
+                ModalPopupExtenderTolerance.Hide();
+                tblleaddetails.Visible = false;
+            }
+        }
+        catch (Exception ex)
+        {
+            g.ShowMessage(this.Page, ex.Message);
+        }
+    }
 
+    private void fetchToleranceData(string toleranceType)
+    {
+        try
+        {
+            DataTable dtgetRange = new DataTable();
+            dtgetRange = g.ReturnData("Select tolerance_grd_details.id, tm.range_type, tolerance_id, tolerance_grd_details.tolerance_type, sym_value as SYM,  grd_5 as GRD5, grd_6 as GRD6, grd_7 as GRD7, grd_8 as GRD8, grd_9 as GRD9, grd_10 as GRD10, grd_11 as GRD11, grd_12 as GRD12, grd_13 as GRD13, grd_14 as GRD14, grd_15 as GRD15, grd_16 as GRD16  from tolerance_grd_details  Left Outer Join tolerance_master_tb as tm  ON tm.id=tolerance_grd_details.tolerance_id where tolerance_grd_details.tolerance_type='" + toleranceType + "' group by tolerance_id");
+            if (dtgetRange.Rows.Count > 0)
+            {
+                if (toleranceType == "Plug Tolerance")
+                {
+                    grdPlugTolerance.DataSource = dtgetRange;
+                    grdPlugTolerance.DataBind();
+                }
+                else if (toleranceType == "Snap Tolerance")
+                {
+                    grdSnapTolerance.DataSource = dtgetRange;
+                    grdSnapTolerance.DataBind();
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            g.ShowMessage(this.Page, ex.Message);
+        }
+    }
+    protected void ImageButton4_Click(object sender, ImageClickEventArgs e)
+    {
+        string strgradeval = hfGradValue.Value;
+        string strid = hfId.Value;
+        string strtolId = hftoleranceId.Value;
+        string strGrade = hfGrade.Value;
+        strGrade = strGrade.Replace("grd", "grd_");
+        string toleranceType = ddlTolerance.SelectedItem.Text;
+        txtToleranceRange.Text = hfRange.Value + "-" + hfGrade.Value.ToUpper() + " T=" + hfGradValue.Value;
 
+        if (!string.IsNullOrEmpty(strgradeval) && !string.IsNullOrEmpty(strtolId) && ddlTolerance.SelectedIndex > 0)
+        {
+            DataTable dtGettoleranceVal = g.ReturnData("Select id, tolerance_id, tolerance_type, sym_value as SYM,  " + strGrade + "  from tolerance_grd_details  where tolerance_type='" + toleranceType + "' and tolerance_id=" + Convert.ToInt32(strtolId) + "  order By id asc");
+            if (dtGettoleranceVal.Rows.Count > 0)
+            {
+                decimal T = Convert.ToDecimal(dtGettoleranceVal.Rows[0][strGrade].ToString());
+                decimal H2 = Convert.ToDecimal(dtGettoleranceVal.Rows[1][strGrade].ToString());
+                decimal Y = Convert.ToDecimal(dtGettoleranceVal.Rows[2][strGrade].ToString());
+                decimal Z = Convert.ToDecimal(dtGettoleranceVal.Rows[3][strGrade].ToString());
+                decimal A = Convert.ToDecimal(dtGettoleranceVal.Rows[4][strGrade].ToString());
 
+                decimal gotoleranceMinus = 0;
+                decimal gotolerancePlus = 0;
+                decimal goWereLimit = 0;
+                decimal noGotoleranceMinus = 0;
+                decimal noGotolerancePlus = 0;
+                decimal lowerSize = Convert.ToDecimal(txtSize.Text);
+                decimal heigherSize = Convert.ToDecimal(txtSizeMax.Text);
+
+                if (toleranceType == "Plug Tolerance")
+                {
+                    gotoleranceMinus = lowerSize + Z;
+                    gotoleranceMinus = gotoleranceMinus - H2;
+                    gotolerancePlus = lowerSize + Z;
+                    gotolerancePlus = gotolerancePlus + H2;
+                    goWereLimit = lowerSize - Y;
+                    goWereLimit = goWereLimit - A;
+                    noGotoleranceMinus = heigherSize - H2;
+                    noGotolerancePlus = heigherSize + H2;
+                }
+                else if (toleranceType == "Snap Tolerance")
+                {
+                    gotoleranceMinus = heigherSize - Z;
+                    gotoleranceMinus = gotoleranceMinus - H2;
+
+                    gotolerancePlus = heigherSize - Z;
+                    gotolerancePlus = gotolerancePlus + H2;
+
+                    goWereLimit = heigherSize + Y;
+                    goWereLimit = goWereLimit - A;
+
+                    noGotoleranceMinus = lowerSize - H2;
+
+                    noGotolerancePlus = lowerSize + H2;
+                }
+
+                txtGoTolleranceMinus.Text = Convert.ToString(gotoleranceMinus);
+                txtGoTollerancePlus.Text = Convert.ToString(gotolerancePlus);
+                txtGoWereLimit.Text = Convert.ToString(goWereLimit);
+                txtNoGoTolleranceMinus.Text = Convert.ToString(noGotoleranceMinus);
+                txtNoGoTollerancePlus.Text = Convert.ToString(noGotolerancePlus);
+            }
+        }
+    }
 }

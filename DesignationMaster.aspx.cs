@@ -143,7 +143,7 @@ public partial class DesignationMaster : System.Web.UI.Page
             stdesig = Regex.Replace(stdesig, @"\s+", " ");
             if (btnSaveDesignation.Text == "Save")
             {
-                DataTable dtexist = g.ReturnData("SELECT *FROM designation_TB where department_id=" + Convert.ToInt32(ddlDepartment.SelectedValue) + " and designation_name='" + stdesig + "'");
+                DataTable dtexist = g.ReturnData("SELECT * FROM designation_TB where department_id=" + Convert.ToInt32(ddlDepartment.SelectedValue) + " and designation_name='" + stdesig + "'");
 
                 if (dtexist.Rows.Count > 0)
                 {
@@ -160,7 +160,7 @@ public partial class DesignationMaster : System.Web.UI.Page
             }
             else
             {
-                DataTable dtexist = g.ReturnData("SELECT *FROM designation_TB where designation_id=" + Convert.ToInt32(lbldesig.Text) + " and department_id=" + Convert.ToInt32(ddlDepartment.SelectedValue) + " and designation_name='" + stdesig + "'");
+                DataTable dtexist = g.ReturnData("SELECT * FROM designation_TB where designation_id=" + Convert.ToInt32(lbldesig.Text) + " and department_id=" + Convert.ToInt32(ddlDepartment.SelectedValue) + " and designation_name='" + stdesig + "'");
 
                 if (dtexist.Rows.Count > 0)
                 {
@@ -170,7 +170,7 @@ public partial class DesignationMaster : System.Web.UI.Page
                 }
                 else
                 {
-                    DataTable dtexist1 = g.ReturnData("SELECT *FROM designation_TB where designation_id<>" + Convert.ToInt32(lbldesig.Text) + " and department_id=" + Convert.ToInt32(ddlDepartment.SelectedValue) + " and designation_name='" + stdesig + "'");
+                    DataTable dtexist1 = g.ReturnData("SELECT * FROM designation_TB where designation_id<>" + Convert.ToInt32(lbldesig.Text) + " and department_id=" + Convert.ToInt32(ddlDepartment.SelectedValue) + " and designation_name='" + stdesig + "'");
 
 
                     if (dtexist1.Rows.Count > 0)

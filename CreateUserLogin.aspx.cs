@@ -13,7 +13,7 @@ public partial class CreateUserLogin : System.Web.UI.Page
     Genreal g = new Genreal();
     QueryClass q = new QueryClass();
     string strusername = "";
-    string strpassword = "";
+    //string strpassword = "";
     #endregion
     protected void Page_Load(object sender, EventArgs e)
     {

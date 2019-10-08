@@ -50,7 +50,7 @@
                                         <asp:BoundField DataField="id" HeaderText="IS Ref. Id" />
                                         <asp:BoundField DataField="is_number" HeaderText="I.S Number" />
                                         <asp:BoundField DataField="description" HeaderText="Description" />
-                                        <asp:BoundField DataField="revesion" HeaderText="Revise" />
+                                        <asp:BoundField DataField="revesion" HeaderText="Revision" />
                                         <asp:BoundField DataField="rev_date" HeaderText="Revise Date" />
                                         <asp:BoundField DataField="release_number" HeaderText="Release Number" />
                                         <asp:BoundField DataField="release_date" HeaderText="Release Date" />
