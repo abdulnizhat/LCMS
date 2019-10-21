@@ -1116,7 +1116,6 @@
                                   <Value>=Fields!masterequipmentused.Value</Value>
                                   <Style>
                                     <FontFamily>Times New Roman</FontFamily>
-                                    <FontSize>11pt</FontSize>
                                   </Style>
                                 </TextRun>
                               </TextRuns>
@@ -1128,8 +1127,7 @@
                           <rd:DefaultName>masterequipmentused</rd:DefaultName>
                           <Style>
                             <Border>
-                              <Color>LightGrey</Color>
-                              <Style>Solid</Style>
+                              <Style>None</Style>
                             </Border>
                             <VerticalAlign>Top</VerticalAlign>
                             <PaddingRight>1pt</PaddingRight>
@@ -1732,7 +1730,7 @@
                 <Style>
                   <FontStyle>Normal</FontStyle>
                   <FontFamily>Times New Roman</FontFamily>
-                  <FontSize>11pt</FontSize>
+                  <FontSize>9pt</FontSize>
                   <FontWeight>Bold</FontWeight>
                   <TextDecoration>None</TextDecoration>
                   <Color>#000000</Color>
@@ -1747,7 +1745,7 @@
         <rd:DefaultName>Textbox12</rd:DefaultName>
         <Top>5.54736in</Top>
         <Left>0.12375in</Left>
-        <Height>0.24652in</Height>
+        <Height>0.1736in</Height>
         <Width>4.28314in</Width>
         <ZIndex>7</ZIndex>
         <Style>
@@ -1768,7 +1766,6 @@
                 <Style>
                   <FontStyle>Normal</FontStyle>
                   <FontFamily>Times New Roman</FontFamily>
-                  <FontSize>11.5pt</FontSize>
                   <FontWeight>Bold</FontWeight>
                   <TextDecoration>None</TextDecoration>
                   <Color>#000000</Color>
@@ -1781,8 +1778,8 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox12</rd:DefaultName>
-        <Top>6.13604in</Top>
-        <Left>0.22525in</Left>
+        <Top>5.97335in</Top>
+        <Left>0.2677in</Left>
         <Height>0.24652in</Height>
         <Width>1.02272in</Width>
         <ZIndex>8</ZIndex>
@@ -1804,7 +1801,6 @@
                 <Style>
                   <FontStyle>Normal</FontStyle>
                   <FontFamily>Times New Roman</FontFamily>
-                  <FontSize>12pt</FontSize>
                   <FontWeight>Bold</FontWeight>
                   <TextDecoration>None</TextDecoration>
                   <Color>#000000</Color>
@@ -1817,10 +1813,10 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox12</rd:DefaultName>
-        <Top>6.13604in</Top>
-        <Left>4.1703in</Left>
+        <Top>5.97335in</Top>
+        <Left>5.28488in</Left>
         <Height>0.24652in</Height>
-        <Width>2.14772in</Width>
+        <Width>1.93783in</Width>
         <ZIndex>9</ZIndex>
         <Style>
           <Border>
@@ -2035,7 +2031,7 @@
           </Textbox>
         </ReportItems>
         <KeepTogether>true</KeepTogether>
-        <Top>6.49765in</Top>
+        <Top>6.24765in</Top>
         <Left>0.17379in</Left>
         <Height>0.78371in</Height>
         <Width>7.26575in</Width>
@@ -2048,10 +2044,14 @@
         </Style>
       </Rectangle>
     </ReportItems>
-    <Height>7.35193in</Height>
-    <Style />
+    <Height>7.06026in</Height>
+    <Style>
+      <Border>
+        <Style>None</Style>
+      </Border>
+    </Style>
   </Body>
-  <Width>8.04041in</Width>
+  <Width>7.91541in</Width>
   <Page>
     <LeftMargin>0.5in</LeftMargin>
     <Style>

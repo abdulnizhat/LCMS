@@ -28,6 +28,7 @@ public partial class CertificationDataBlankReportViewer : System.Web.UI.Page
                         string gaugeType = str[1].ToString();
                         string sizeRange = str[2].ToString();
                         string certId = str[3].ToString();
+                        string withdata = str[4].ToString();
                         DataTable dt2 = new DataTable();
                         DataTable dt1 = new DataTable();
                         DataSet ds1 = new DataSet();
@@ -39,7 +40,8 @@ public partial class CertificationDataBlankReportViewer : System.Web.UI.Page
                         string strQueryGaugeDetails = @"SELECT ct.gauge_id,gt.gauge_name, gt.gauge_sr_no, gt.gauge_Manufature_Id,
                             gt.size_range, tm.type_of_gauge, cgr.satifactory as conditionatreceipt,
       tp.check_accuracy as testpurpose, rf.description as isrefrence, cm.description as calibmethod,  un.gauge_type as uncertinity,
- tm.master_equipment, ct.certificate_no, ct.identification_mark_by, ct.calibration_carriedout, cus.customer_name from certificate_data_tb as ct
+ tm.master_equipment, ct.certificate_no, ct.identification_mark_by, ct.calibration_carriedout, calitb.id as calitbid, cus.customer_name
+from certificate_data_tb as ct
  Left Outer join gaugemaster_tb as gt  ON ct.gauge_id=gt.gauge_id
  Left Outer join typemaster_tb as tm  ON gt.gauge_type_master_id=tm.id  
 Left Outer join condition_gauge_receipt_tb as cgr  ON tm.condition_of_receipt=cgr.satifactory_id 
@@ -50,6 +52,7 @@ Left Outer join subtypemaster_tb as su  ON tm.sub_type_id=su.id
 Left Outer join is_referance_guideline_tb as rf  ON tm.is_ref_guidline=rf.id  
 Left Outer join uncertainty_measurement_tb as un  ON tm.uncertinity=un.id  
 Left Outer join customer_tb as cus  ON ct.customer_id=cus.customer_id   
+Left Outer join certification_tb as calitb  ON calitb.certification_data_id=ct.id 
 where ct.id=" + Convert.ToInt32(certId) + " ";
                         string gauge_name = "";
                         Warning[] warnings;
@@ -57,9 +60,11 @@ where ct.id=" + Convert.ToInt32(certId) + " ";
                         string mimeType = string.Empty;
                         string encoding = string.Empty;
                         string extension = string.Empty;
+                        string calibrationTbID = string.Empty;
                         ds1 = g.ReturnData1(strQueryGaugeDetails);
                         if (ds1.Tables[0].Rows.Count > 0)
                         {
+                            calibrationTbID = ds1.Tables[0].Rows[0]["calitbid"].ToString();
                             gauge_name = ds1.Tables[0].Rows[0]["gauge_name"].ToString();
                             gauge_name = gauge_name.Replace(" ", "-");
                             gauge_name = gauge_name + "_CertID_" + certId + ".pdf";
@@ -78,7 +83,7 @@ where ct.id=" + Convert.ToInt32(certId) + " ";
                                     }
                                     else
                                     {
-                                       DataColumn masterequipmentused = dtMasterEqp.Columns.Add("masterequipmentused");
+                                        DataColumn masterequipmentused = dtMasterEqp.Columns.Add("masterequipmentused");
                                     }
                                     DataRow dr = dtMasterEqp.NewRow();
                                     string strdesc = dtMasterEquipMentUsed.Rows[0]["description"].ToString();
@@ -98,7 +103,14 @@ where ct.id=" + Convert.ToInt32(certId) + " ";
                             ReportDataSource mastereqp = new ReportDataSource("DataSet2", dtMasterEqp);
                             ReportViewer1.LocalReport.DataSources.Add(mastereqp);
                         }
-                        ds2 = g.ReturnData1("Select id, size from nominal_size_tb where nominal_size='" + sizeRange + "' and gauge_type='" + gaugeType + "' order by id asc");
+                        if (withdata == "withdata")
+                        {
+                            ds2 = g.ReturnData1("Select id, nominal_size as size, r1,r2,r3, observed_mm as meanreading from calibration_results_tb WHERE certification_id= '" + calibrationTbID + "' order by id asc");
+                        }
+                        else
+                        {
+                            ds2 = g.ReturnData1("Select id, size from nominal_size_tb where nominal_size='" + sizeRange + "' and gauge_type='" + gaugeType + "' order by id asc");
+                        }
                         if (ds2.Tables[0].Rows.Count > 0)
                         {
                             for (int j = 0; j < ds2.Tables[0].Rows.Count; j++)
@@ -117,13 +129,26 @@ where ct.id=" + Convert.ToInt32(certId) + " ";
                                 }
                                 DataRow dr = dtNominalSize.NewRow();
                                 string strnominalSize = ds2.Tables[0].Rows[j]["size"].ToString();
+
                                 dr[0] = strnominalSize;
-                                dr[1] = "";
-                                dr[2] = "";
-                                dr[3] = "";
-                                dr[4] = "";
-                                dtNominalSize.Rows.Add(dr);
-                                ViewState["dtNominalSize"] = dtNominalSize;
+                                if (withdata == "withdata")
+                                {
+                                    dr[1] = ds2.Tables[0].Rows[j]["r1"].ToString();
+                                    dr[2] = ds2.Tables[0].Rows[j]["r2"].ToString();
+                                    dr[3] = ds2.Tables[0].Rows[j]["r3"].ToString();
+                                    dr[4] = ds2.Tables[0].Rows[j]["meanreading"].ToString();
+                                    dtNominalSize.Rows.Add(dr);
+                                    ViewState["dtNominalSize"] = dtNominalSize;
+                                }
+                                else if (withdata == "blank")
+                                {
+                                    dr[1] = "";
+                                    dr[2] = "";
+                                    dr[3] = "";
+                                    dr[4] = "";
+                                    dtNominalSize.Rows.Add(dr);
+                                    ViewState["dtNominalSize"] = dtNominalSize;
+                                }
                             }
                             ReportDataSource src2 = new ReportDataSource("DataSet3", dtNominalSize);
                             ReportViewer1.LocalReport.DataSources.Add(src2);

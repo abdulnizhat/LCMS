@@ -394,6 +394,204 @@
                   <VerticalAlign>Top</VerticalAlign>
                 </Style>
               </Textbox>
+              <Textbox Name="gominus">
+                <CanGrow>true</CanGrow>
+                <KeepTogether>true</KeepTogether>
+                <Paragraphs>
+                  <Paragraph>
+                    <TextRuns>
+                      <TextRun>
+                        <Value>=First(Fields!gominus.Value, "DataSet2")</Value>
+                        <Style>
+                          <FontFamily>Times New Roman</FontFamily>
+                          <FontSize>9pt</FontSize>
+                        </Style>
+                      </TextRun>
+                    </TextRuns>
+                    <Style>
+                      <TextAlign>Center</TextAlign>
+                    </Style>
+                  </Paragraph>
+                </Paragraphs>
+                <rd:DefaultName>gominus</rd:DefaultName>
+                <Top>0.36806in</Top>
+                <Left>3.21531in</Left>
+                <Height>0.17708in</Height>
+                <Width>0.56862in</Width>
+                <ZIndex>16</ZIndex>
+                <Style>
+                  <Border>
+                    <Style>None</Style>
+                  </Border>
+                  <VerticalAlign>Middle</VerticalAlign>
+                </Style>
+              </Textbox>
+              <Textbox Name="nogominus">
+                <CanGrow>true</CanGrow>
+                <KeepTogether>true</KeepTogether>
+                <Paragraphs>
+                  <Paragraph>
+                    <TextRuns>
+                      <TextRun>
+                        <Value>=First(Fields!nogominus.Value, "DataSet2")</Value>
+                        <Style>
+                          <FontFamily>Times New Roman</FontFamily>
+                          <FontSize>9pt</FontSize>
+                        </Style>
+                      </TextRun>
+                    </TextRuns>
+                    <Style>
+                      <TextAlign>Center</TextAlign>
+                    </Style>
+                  </Paragraph>
+                </Paragraphs>
+                <rd:DefaultName>nogominus</rd:DefaultName>
+                <Top>0.36806in</Top>
+                <Left>3.92143in</Left>
+                <Height>0.17013in</Height>
+                <Width>0.73833in</Width>
+                <ZIndex>17</ZIndex>
+                <Style>
+                  <Border>
+                    <Style>None</Style>
+                  </Border>
+                  <VerticalAlign>Middle</VerticalAlign>
+                </Style>
+              </Textbox>
+              <Textbox Name="goplus">
+                <CanGrow>true</CanGrow>
+                <KeepTogether>true</KeepTogether>
+                <Paragraphs>
+                  <Paragraph>
+                    <TextRuns>
+                      <TextRun>
+                        <Value>=First(Fields!goplus.Value, "DataSet2")</Value>
+                        <Style>
+                          <FontFamily>Times New Roman</FontFamily>
+                          <FontSize>9pt</FontSize>
+                        </Style>
+                      </TextRun>
+                    </TextRuns>
+                    <Style>
+                      <TextAlign>Center</TextAlign>
+                    </Style>
+                  </Paragraph>
+                </Paragraphs>
+                <rd:DefaultName>goplus</rd:DefaultName>
+                <Top>0.60069in</Top>
+                <Left>3.2292in</Left>
+                <Height>0.1987in</Height>
+                <Width>0.56862in</Width>
+                <ZIndex>18</ZIndex>
+                <Style>
+                  <Border>
+                    <Style>None</Style>
+                  </Border>
+                  <VerticalAlign>Middle</VerticalAlign>
+                </Style>
+              </Textbox>
+              <Textbox Name="nogoplus">
+                <CanGrow>true</CanGrow>
+                <KeepTogether>true</KeepTogether>
+                <Paragraphs>
+                  <Paragraph>
+                    <TextRuns>
+                      <TextRun>
+                        <Value>=First(Fields!nogoplus.Value, "DataSet2")</Value>
+                        <Style>
+                          <FontFamily>Times New Roman</FontFamily>
+                          <FontSize>9pt</FontSize>
+                        </Style>
+                      </TextRun>
+                    </TextRuns>
+                    <Style>
+                      <TextAlign>Center</TextAlign>
+                    </Style>
+                  </Paragraph>
+                </Paragraphs>
+                <rd:DefaultName>nogoplus</rd:DefaultName>
+                <Top>0.61189in</Top>
+                <Left>3.93532in</Left>
+                <Height>0.18829in</Height>
+                <Width>0.72444in</Width>
+                <ZIndex>19</ZIndex>
+                <Style>
+                  <Border>
+                    <Style>None</Style>
+                  </Border>
+                  <VerticalAlign>Middle</VerticalAlign>
+                </Style>
+              </Textbox>
+              <Textbox Name="observedgo">
+                <CanGrow>true</CanGrow>
+                <KeepTogether>true</KeepTogether>
+                <Paragraphs>
+                  <Paragraph>
+                    <TextRuns>
+                      <TextRun>
+                        <Value>=First(Fields!observedgo.Value, "DataSet2")</Value>
+                        <Style>
+                          <FontFamily>Times New Roman</FontFamily>
+                          <FontSize>9pt</FontSize>
+                        </Style>
+                      </TextRun>
+                    </TextRuns>
+                    <Style>
+                      <TextAlign>Center</TextAlign>
+                    </Style>
+                  </Paragraph>
+                </Paragraphs>
+                <rd:DefaultName>observedgo</rd:DefaultName>
+                <Top>0.6084in</Top>
+                <Left>4.78475in</Left>
+                <Height>0.1875in</Height>
+                <Width>0.70462in</Width>
+                <ZIndex>20</ZIndex>
+                <Visibility>
+                  <Hidden>=IIF(First(Fields!observedgo.Value, "DataSet2")="observedgo",TRUE, FALSE)</Hidden>
+                </Visibility>
+                <Style>
+                  <Border>
+                    <Style>None</Style>
+                  </Border>
+                  <VerticalAlign>Middle</VerticalAlign>
+                </Style>
+              </Textbox>
+              <Textbox Name="observednogo">
+                <CanGrow>true</CanGrow>
+                <KeepTogether>true</KeepTogether>
+                <Paragraphs>
+                  <Paragraph>
+                    <TextRuns>
+                      <TextRun>
+                        <Value>=First(Fields!observednogo.Value, "DataSet2")</Value>
+                        <Style>
+                          <FontFamily>Times New Roman</FontFamily>
+                          <FontSize>9pt</FontSize>
+                        </Style>
+                      </TextRun>
+                    </TextRuns>
+                    <Style>
+                      <TextAlign>Center</TextAlign>
+                    </Style>
+                  </Paragraph>
+                </Paragraphs>
+                <rd:DefaultName>observednogo</rd:DefaultName>
+                <Top>0.61189in</Top>
+                <Left>5.61437in</Left>
+                <Height>0.17013in</Height>
+                <Width>0.955in</Width>
+                <ZIndex>21</ZIndex>
+                <Visibility>
+                  <Hidden>=IIF(First(Fields!observednogo.Value, "DataSet2")="observednogo",TRUE, FALSE)</Hidden>
+                </Visibility>
+                <Style>
+                  <Border>
+                    <Style>None</Style>
+                  </Border>
+                  <VerticalAlign>Middle</VerticalAlign>
+                </Style>
+              </Textbox>
             </ReportItems>
             <KeepTogether>true</KeepTogether>
             <Top>0.36184in</Top>
@@ -1617,11 +1815,9 @@
                           <rd:DefaultName>masterequipmentused</rd:DefaultName>
                           <Style>
                             <Border>
-                              <Color>LightGrey</Color>
-                              <Style>Solid</Style>
+                              <Style>None</Style>
                             </Border>
                             <VerticalAlign>Top</VerticalAlign>
-                            <PaddingBottom>1pt</PaddingBottom>
                           </Style>
                         </Textbox>
                       </CellContents>
@@ -1715,7 +1911,6 @@
                 <Style>
                   <FontStyle>Normal</FontStyle>
                   <FontFamily>Times New Roman</FontFamily>
-                  <FontSize>11.5pt</FontSize>
                   <FontWeight>Bold</FontWeight>
                   <TextDecoration>None</TextDecoration>
                   <Color>#000000</Color>
@@ -1728,9 +1923,9 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox12</rd:DefaultName>
-        <Top>7.20449in</Top>
-        <Left>0.39798in</Left>
-        <Height>0.24652in</Height>
+        <Top>7.05866in</Top>
+        <Left>0.39639in</Left>
+        <Height>0.188in</Height>
         <Width>1.02272in</Width>
         <ZIndex>5</ZIndex>
         <Style>
@@ -1751,7 +1946,6 @@
                 <Style>
                   <FontStyle>Normal</FontStyle>
                   <FontFamily>Times New Roman</FontFamily>
-                  <FontSize>12pt</FontSize>
                   <FontWeight>Bold</FontWeight>
                   <TextDecoration>None</TextDecoration>
                   <Color>#000000</Color>
@@ -1764,9 +1958,9 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>Textbox12</rd:DefaultName>
-        <Top>7.20449in</Top>
-        <Left>4.34303in</Left>
-        <Height>0.24652in</Height>
+        <Top>7.05866in</Top>
+        <Left>5.34144in</Left>
+        <Height>0.21578in</Height>
         <Width>2.14772in</Width>
         <ZIndex>6</ZIndex>
         <Style>
@@ -1982,8 +2176,8 @@
           </Textbox>
         </ReportItems>
         <KeepTogether>true</KeepTogether>
-        <Top>7.5661in</Top>
-        <Left>0.34652in</Left>
+        <Top>7.3161in</Top>
+        <Left>0.33477in</Left>
         <Height>0.78371in</Height>
         <Width>7.26575in</Width>
         <ZIndex>7</ZIndex>
@@ -2396,10 +2590,10 @@
         </Style>
       </Textbox>
     </ReportItems>
-    <Height>8.53348in</Height>
+    <Height>8.14806in</Height>
     <Style />
   </Body>
-  <Width>7.99875in</Width>
+  <Width>7.95708in</Width>
   <Page>
     <LeftMargin>0.5in</LeftMargin>
     <Style />

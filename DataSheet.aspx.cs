@@ -38,11 +38,11 @@ public partial class DataSheet : System.Web.UI.Page
         {
             ddlCertificateNo.Items.Clear();
             DataTable dt = displaySerialNumber.GetSerialNumber();
-        ddlCertificateNo.DataSource = dt;
-        ddlCertificateNo.DataTextField = "Certificate_No_List";
-        ddlCertificateNo.DataValueField = "Certificate_No_List";
-        ddlCertificateNo.DataBind();
-        ddlCertificateNo.Items.Insert(0, "--Select--");
+            ddlCertificateNo.DataSource = dt;
+            ddlCertificateNo.DataTextField = "Certificate_No_List";
+            ddlCertificateNo.DataValueField = "Certificate_No_List";
+            ddlCertificateNo.DataBind();
+            ddlCertificateNo.Items.Insert(0, "--Select--");
         }
         catch (Exception ex)
         {
@@ -108,7 +108,7 @@ Left Outer join gaugemaster_tb as gt
  ON tm.is_ref_guidline=rf.id
  Left Outer join customer_tb as cus
  ON ct.customer_id=cus.customer_id 
- where ct.is_certification_done='False' and ct.customer_id="+ Convert.ToInt32(Session["Customer_ID"])+" order by  ct.id desc ";
+ where ct.is_certification_done='False' and ct.customer_id=" + Convert.ToInt32(Session["Customer_ID"]) + " order by  ct.id desc ";
             DataTable dtBindGrid = g.ReturnData(query);
             grdCertificateData.DataSource = dtBindGrid;
             grdCertificateData.DataBind();
@@ -192,7 +192,7 @@ Left Outer join gaugemaster_tb as gt
     {
         try
         {
-           
+
             LinkButton lnk = (LinkButton)sender;
             lblCertificateDataId.Text = lnk.CommandArgument;
             string query = @"Select ct.id, ct.certificate_no, ct.gauge_id, gt.gauge_name, gt.make, cus.customer_name, ct.customer_id,su.size_range as sizeRang, 
@@ -506,7 +506,7 @@ Left Outer join gaugemaster_tb as gt
             LinkButton lnk = (LinkButton)sender;
             string id = lnk.CommandArgument;
             string strQuery = @"Select ct.id, ct.gauge_id, su.gauge_type, su.size_range
-  from lcms_db.certificate_data_tb as ct Left Outer join gaugemaster_tb as gt  ON ct.gauge_id=gt.gauge_id
+  from certificate_data_tb as ct Left Outer join gaugemaster_tb as gt  ON ct.gauge_id=gt.gauge_id
  Left Outer join typemaster_tb as tm  ON gt.gauge_type_master_id=tm.id  Left Outer join subtypemaster_tb as su
  ON tm.sub_type_id=su.id  where ct.id=" + Convert.ToInt32(id) + "";
             DataTable dtgetgaugeId = g.ReturnData(strQuery);
@@ -515,14 +515,14 @@ Left Outer join gaugemaster_tb as gt
             string gaugeId = "";
             string certId = "";
             string queryStringVal = "";
-            //string reportType = "blank";
+            string reportType = "blank";
             if (dtgetgaugeId.Rows.Count > 0)
             {
                 gaugeType = dtgetgaugeId.Rows[0]["gauge_type"].ToString();
                 sizerange = dtgetgaugeId.Rows[0]["size_range"].ToString();
                 gaugeId = dtgetgaugeId.Rows[0]["gauge_id"].ToString();
                 certId = dtgetgaugeId.Rows[0]["id"].ToString();
-                queryStringVal = gaugeId + "," + gaugeType + "," + sizerange + "," + certId;  // +"," + reportType;
+                queryStringVal = gaugeId + "," + gaugeType + "," + sizerange + "," + certId + "," + reportType;
             }
             else
             {
@@ -536,7 +536,7 @@ Left Outer join gaugemaster_tb as gt
             }
             else
             {
-                if (gaugeType=="Micrometer")
+                if (gaugeType == "Micrometer")
                 {
                     Response.Redirect("CertificationDataBlankReportViewer.aspx?queryStringVal=" + queryStringVal);
                 }
@@ -544,9 +544,9 @@ Left Outer join gaugemaster_tb as gt
                 {
                     Response.Redirect("AttributeReportViewerBlank.aspx?queryStringVal=" + queryStringVal);
                 }
-                else if (gaugeType=="Pressure")
+                else if (gaugeType == "Pressure")
                 {
-                     Response.Redirect("pressurreeportViewerBlank.aspx?queryStringVal=" + queryStringVal);
+                    Response.Redirect("pressurreeportViewerBlank.aspx?queryStringVal=" + queryStringVal);
                 }
                 else if (gaugeType == "Feeler")
                 {
@@ -564,9 +564,6 @@ Left Outer join gaugemaster_tb as gt
                 {
                     Response.Redirect("vernierReportViewerBlank.aspx?queryStringVal=" + queryStringVal);
                 }
-                //string ss = "window.open('CertificationDataBlankReportViewer.aspx?queryStringVal=" + queryStringVal + "," + "Type=All','mywindow','width=1000,height=700,left=200,top=1,screenX=100,screenY=100,toolbar=no,location=no,directories=no,status=yes,menubar=no,scrollbars=yes,copyhistory=yes,resizable=no')";
-                //string script = "<script language='javascript'>" + ss + "</script>";
-                //ScriptManager.RegisterStartupScript(this, this.GetType(), "PopUpWindow", script, false);
             }
         }
         catch (Exception ex)

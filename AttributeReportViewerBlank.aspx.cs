@@ -28,6 +28,7 @@ public partial class AttributeReportViewerBlank : System.Web.UI.Page
                         string gaugeType = str[1].ToString();
                         string sizeRange = str[2].ToString();
                         string certId = str[3].ToString();
+                        string withdata = str[4].ToString();
                         DataTable dt2 = new DataTable();
                         DataTable dt1 = new DataTable();
                         DataSet ds1 = new DataSet();
@@ -43,9 +44,11 @@ public partial class AttributeReportViewerBlank : System.Web.UI.Page
                         string mimeType = string.Empty;
                         string encoding = string.Empty;
                         string extension = string.Empty;
+                        string calibrationTbID = string.Empty;
                         ds1 = g.ReturnData1(strQueryGaugeDetails);
                         if (ds1.Tables[0].Rows.Count > 0)
                         {
+                            calibrationTbID = ds1.Tables[0].Rows[0]["calitbid"].ToString();
                             gauge_name= ds1.Tables[0].Rows[0]["gauge_name"].ToString();
                             gauge_name = gauge_name.Replace(" ", "-");
                             gauge_name = gauge_name + "_CertID_" + certId+".pdf";
@@ -54,7 +57,6 @@ public partial class AttributeReportViewerBlank : System.Web.UI.Page
                             for (int i = 0; i < strMasterEqpArray.Count(); i++)
                             {
                                 int masterEquipId = Convert.ToInt32(strMasterEqpArray[i].ToString());
-                                //DataTable dtMasterEquipMentUsed = g.ReturnData("Select description from master_equipment_used_tb where id=" + Convert.ToInt32(masterEquipId) + "");
                                 DataTable dtMasterEquipMentUsed = g.GetMasterEquipmentDetails(masterEquipId);
                                 if (dtMasterEquipMentUsed.Rows.Count > 0)
                                 {
@@ -74,8 +76,6 @@ public partial class AttributeReportViewerBlank : System.Web.UI.Page
                                 }
                             }
                            
-                            //ReportViewer1.Reset();
-                            //ReportViewer1.LocalReport.Refresh();
                             ReportViewer1.ProcessingMode = ProcessingMode.Local;
                             ReportViewer1.LocalReport.ReportPath = Server.MapPath("~/AttributeReportBlank.rdlc");
                             ReportDataSource rep = new ReportDataSource("DataSet1", ds1.Tables[0]);
@@ -87,7 +87,14 @@ public partial class AttributeReportViewerBlank : System.Web.UI.Page
                                 ReportViewer1.LocalReport.DataSources.Add(mastereqp);
                             }
                         }
-                        ds2 = g.ReturnData1("Select  make, size_range as lowersize, size2 as highersize, go_were_limit as werelimit,'gominus', 'goplus', 'nogominus', 'nogoplus',  'observedgo', 'observednogo' from gaugemaster_tb where gauge_id='" + gaugeId + "' ");
+                        if (withdata == "withdata")
+                        {
+                            ds2 = g.ReturnData1("Select  make, lowersize, highersize, gominus, goplus, nogominus, nogoplus, werelimit, observedgo, observednogo from attribute_result_tb where certification_id='" + calibrationTbID + "' order by id asc");
+                        }
+                        else
+                        {
+                            ds2 = g.ReturnData1("Select  make, size_range as lowersize, size2 as highersize, go_were_limit as werelimit, go_tollerance_minus as gominus, go_tollerance_plus as goplus, no_go_tollerance_minus as nogominus, no_go_tollerance_plus as nogoplus,  'observedgo', 'observednogo' from gaugemaster_tb where gauge_id='" + gaugeId + "' ");
+                        }
                         if (ds2.Tables[0].Rows.Count > 0)
                         {
                             ReportDataSource src2 = new ReportDataSource("DataSet2", ds2.Tables[0]);
