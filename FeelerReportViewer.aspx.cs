@@ -42,6 +42,7 @@ public partial class FeelerReportViewer : System.Web.UI.Page
                         string mimeType = string.Empty;
                         string encoding = string.Empty;
                         string extension = string.Empty;
+                        string calibrationTbID = string.Empty;
                         ds1 = g.ReturnData1(strQueryGaugeDetails);
                         if (ds1.Tables[0].Rows.Count > 0)
                         {
@@ -85,7 +86,6 @@ public partial class FeelerReportViewer : System.Web.UI.Page
                                 ReportViewer1.LocalReport.DataSources.Add(mastereqp);
                             }
                         }
-                        // ds2 = g.ReturnData1("Select id, nominal_size,exterroravgtop, exterroravgbottom, interroravgtop, interrorbottom, calculated_ex_error_top, calculated_ex_error_bottom, calculated_in_error_top, calculated_in_error_bottom from vernier_result_tb where certification_id='" + certId + "' order by id asc");
                         ds2 = g.ReturnData1("Select id, nominal_size, observed, variation from feeler_result_tb where certification_id='" + certId + "' and nominal_size < 0.110 order by id asc");
                         if (ds2.Tables[0].Rows.Count > 0)
                         {

@@ -12,7 +12,7 @@ public partial class FeelerReportViewerBlank : System.Web.UI.Page
     Genreal g = new Genreal();
     DataTable dtMasterEqp = new DataTable();
     DataTable dtNominalSize = new DataTable();
-     DataTable dtNominalSize2 = new DataTable();
+    DataTable dtNominalSize2 = new DataTable();
     protected void Page_Load(object sender, EventArgs e)
     {
         if (Session["User_ID"] != null && Session["Customer_ID"] != null)
@@ -29,6 +29,7 @@ public partial class FeelerReportViewerBlank : System.Web.UI.Page
                         string gaugeType = str[1].ToString();
                         string sizeRange = str[2].ToString();
                         string certId = str[3].ToString();
+                        string withdata = str[4].ToString();
                         DataTable dt2 = new DataTable();
                         DataTable dt1 = new DataTable();
                         DataSet ds1 = new DataSet();
@@ -45,9 +46,11 @@ public partial class FeelerReportViewerBlank : System.Web.UI.Page
                         string mimeType = string.Empty;
                         string encoding = string.Empty;
                         string extension = string.Empty;
+                        string calibrationTbID = string.Empty;
                         ds1 = g.ReturnData1(strQueryGaugeDetails);
                         if (ds1.Tables[0].Rows.Count > 0)
                         {
+                            calibrationTbID = ds1.Tables[0].Rows[0]["calitbid"].ToString();
                             gauge_name = ds1.Tables[0].Rows[0]["gauge_name"].ToString();
                             gauge_name = gauge_name.Replace(" ", "-");
                             gauge_name = gauge_name + "_CertID_" + certId + ".pdf";
@@ -56,7 +59,6 @@ public partial class FeelerReportViewerBlank : System.Web.UI.Page
                             for (int i = 0; i < strMasterEqpArray.Count(); i++)
                             {
                                 int masterEquipId = Convert.ToInt32(strMasterEqpArray[i].ToString());
-                                //DataTable dtMasterEquipMentUsed = g.ReturnData("Select description from master_equipment_used_tb where id=" + Convert.ToInt32(masterEquipId) + "");
                                 DataTable dtMasterEquipMentUsed = g.GetMasterEquipmentDetails(masterEquipId);
                                 if (dtMasterEquipMentUsed.Rows.Count > 0)
                                 {
@@ -73,7 +75,7 @@ public partial class FeelerReportViewerBlank : System.Web.UI.Page
                                     dr[0] = strdesc;
                                     dtMasterEqp.Rows.Add(dr);
                                     ViewState["dtMasterEqp"] = dtMasterEqp;
-                                }   
+                                }
                             }
 
                             ReportViewer1.Reset();
@@ -87,82 +89,110 @@ public partial class FeelerReportViewerBlank : System.Web.UI.Page
                                 ReportViewer1.LocalReport.DataSources.Add(mastereqp);
                             }
                         }
-                        // ds2 = g.ReturnData1("Select id, nominal_size,exterroravgtop, exterroravgbottom, interroravgtop, interrorbottom, calculated_ex_error_top, calculated_ex_error_bottom, calculated_in_error_top, calculated_in_error_bottom from vernier_result_tb where certification_id='" + certId + "' order by id asc");
-                        //ds2 = g.ReturnData1("Select id, nominal_size, observed, variation from feeler_result_tb where certification_id='" + certId + "' and nominal_size < 0.110 order by id asc");
-                        //if (ds2.Tables[0].Rows.Count > 0)
-                        //{
-                        //    ReportDataSource src2 = new ReportDataSource("DataSet2", ds2.Tables[0]);
-                        //    ReportViewer1.LocalReport.DataSources.Add(src2);
-                        //}
-                        //ds4 = g.ReturnData1("Select id, nominal_size, observed, variation from feeler_result_tb where certification_id='" + certId + "' and nominal_size > 0.110 order by id asc");
-                        //if (ds4.Tables[0].Rows.Count > 0)
-                        //{
-                        //    ReportDataSource src4 = new ReportDataSource("DataSet4", ds4.Tables[0]);
-                        //    ReportViewer1.LocalReport.DataSources.Add(src4);
-                        //}
-                        DataTable dtgetNominalSize = g.ReturnData("Select id, size, gauge_type from nominal_size_tb where nominal_size='" + sizeRange + "' and gauge_type='" + gaugeType + "' and size < 0.110 order by id asc");
-            string strnominalSize = "";
-            if (dtgetNominalSize.Rows.Count > 0)
-            {
-                for (int j = 0; j < dtgetNominalSize.Rows.Count; j++)
-                {
-                    if (ViewState["dtNominalSize"] != null)
-                    {
-                        dtNominalSize = (DataTable)ViewState["dtNominalSize"];
-                    }
-                    else
-                    {
-                        DataColumn nominal_size = dtNominalSize.Columns.Add("nominal_size");
-                        DataColumn observed = dtNominalSize.Columns.Add("observed");
-                        DataColumn variation = dtNominalSize.Columns.Add("variation");
-                    }
-                    DataRow dr = dtNominalSize.NewRow();
-                    strnominalSize = dtgetNominalSize.Rows[j]["size"].ToString();
-                    dr[0] = strnominalSize;
-                    dr[1] = "";
-                    dr[2] = "";
-                    dtNominalSize.Rows.Add(dr);
-                    ViewState["dtNominalSize"] = dtNominalSize;
-                }
-            }
-            if (dtNominalSize.Rows.Count > 0)
-            {
-                ReportDataSource src2 = new ReportDataSource("DataSet2", dtNominalSize);
-                ReportViewer1.LocalReport.DataSources.Add(src2);
-            }
-            DataTable dtgetNominalSize2 = g.ReturnData("Select id, size, gauge_type from nominal_size_tb where nominal_size='" + sizeRange + "' and gauge_type='" + gaugeType + "' and size > 0.110  order by id asc");
-            string strnominalSize2 = "";
-            if (dtgetNominalSize2.Rows.Count > 0)
-            {
-                for (int j = 0; j < dtgetNominalSize2.Rows.Count; j++)
-                {
-                    if (ViewState["dtNominalSize2"] != null)
-                    {
-                        dtNominalSize2 = (DataTable)ViewState["dtNominalSize2"];
-                    }
-                    else
-                    {
-                        DataColumn nominal_size = dtNominalSize2.Columns.Add("nominal_size");
-                        DataColumn observed = dtNominalSize2.Columns.Add("observed");
-                        DataColumn variation = dtNominalSize2.Columns.Add("variation");
-                    }
-                    DataRow dr = dtNominalSize2.NewRow();
-                    strnominalSize2 = dtgetNominalSize2.Rows[j]["size"].ToString();
-                    dr[0] = strnominalSize2;
-                    dr[1] = "";
-                    dr[2] = "";
-                    dtNominalSize2.Rows.Add(dr);
-                    ViewState["dtNominalSize2"] = dtNominalSize2;
-                }
-            }
-            if (dtNominalSize2.Rows.Count > 0)
-            {
-                ReportDataSource src4 = new ReportDataSource("DataSet4", dtNominalSize2);
-                ReportViewer1.LocalReport.DataSources.Add(src4);
-            }
+                        ds2 = g.ReturnData1("Select id, nominal_size,exterroravgtop, exterroravgbottom, interroravgtop, interrorbottom, calculated_ex_error_top, calculated_ex_error_bottom, calculated_in_error_top, calculated_in_error_bottom from vernier_result_tb where certification_id='" + certId + "' order by id asc");
+                        ds2 = g.ReturnData1("Select id, nominal_size, observed, variation from feeler_result_tb where certification_id='" + certId + "' and nominal_size < 0.110 order by id asc");
+                        if (ds2.Tables[0].Rows.Count > 0)
+                        {
+                            ReportDataSource src2 = new ReportDataSource("DataSet2", ds2.Tables[0]);
+                            ReportViewer1.LocalReport.DataSources.Add(src2);
+                        }
+                        ds4 = g.ReturnData1("Select id, nominal_size, observed, variation from feeler_result_tb where certification_id='" + certId + "' and nominal_size > 0.110 order by id asc");
+                        if (ds4.Tables[0].Rows.Count > 0)
+                        {
+                            ReportDataSource src4 = new ReportDataSource("DataSet4", ds4.Tables[0]);
+                            ReportViewer1.LocalReport.DataSources.Add(src4);
+                        }
+                        DataTable dtgetNominalSize = new DataTable();
+                        DataTable dtgetNominalSize2 = new DataTable();
+                        if (withdata == "withdata")
+                        {
+                            dtgetNominalSize = g.ReturnData("Select id, nominal_size as size, observed, variation from feeler_result_tb where certification_id='" + calibrationTbID + "' and  nominal_size < 0.110 order by id asc");
+                            dtgetNominalSize2 = g.ReturnData("Select id, nominal_size as size, observed, variation from feeler_result_tb where certification_id='" + calibrationTbID + "' and  nominal_size > 0.110 order by id asc");
+                        }
+                        else
+                        {
+                            dtgetNominalSize = g.ReturnData("Select id, size, gauge_type from nominal_size_tb where nominal_size='" + sizeRange + "' and gauge_type='" + gaugeType + "' and size < 0.110 order by id asc");
+                            dtgetNominalSize2 = g.ReturnData("Select id, size, gauge_type from nominal_size_tb where nominal_size='" + sizeRange + "' and gauge_type='" + gaugeType + "' and size > 0.110  order by id asc");
+                        }
+                        string strnominalSize = "";
+                        if (dtgetNominalSize.Rows.Count > 0)
+                        {
+                            for (int j = 0; j < dtgetNominalSize.Rows.Count; j++)
+                            {
+                                if (ViewState["dtNominalSize"] != null)
+                                {
+                                    dtNominalSize = (DataTable)ViewState["dtNominalSize"];
+                                }
+                                else
+                                {
+                                    DataColumn nominal_size = dtNominalSize.Columns.Add("nominal_size");
+                                    DataColumn observed = dtNominalSize.Columns.Add("observed");
+                                    DataColumn variation = dtNominalSize.Columns.Add("variation");
+                                }
+                                DataRow dr = dtNominalSize.NewRow();
+                                strnominalSize = dtgetNominalSize.Rows[j]["size"].ToString();
+                                dr[0] = strnominalSize;
+                                if (withdata == "withdata")
+                                {
+                                    dr[1] = dtgetNominalSize.Rows[j]["observed"].ToString();
+                                    dr[2] = dtgetNominalSize.Rows[j]["variation"].ToString();
+                                }
+                                else
+                                {
+                                    dr[1] = "";
+                                    dr[2] = "";
+                                }
+                                dtNominalSize.Rows.Add(dr);
+                                ViewState["dtNominalSize"] = dtNominalSize;
+                            }
+                        }
+                        if (dtNominalSize.Rows.Count > 0)
+                        {
+                            ReportDataSource src2 = new ReportDataSource("DataSet2", dtNominalSize);
+                            ReportViewer1.LocalReport.DataSources.Add(src2);
+                        }
+                        string strnominalSize2 = "";
+                        if (dtgetNominalSize2.Rows.Count > 0)
+                        {
+                            for (int j = 0; j < dtgetNominalSize2.Rows.Count; j++)
+                            {
+                                if (ViewState["dtNominalSize2"] != null)
+                                {
+                                    dtNominalSize2 = (DataTable)ViewState["dtNominalSize2"];
+                                }
+                                else
+                                {
+                                    DataColumn nominal_size = dtNominalSize2.Columns.Add("nominal_size");
+                                    DataColumn observed = dtNominalSize2.Columns.Add("observed");
+                                    DataColumn variation = dtNominalSize2.Columns.Add("variation");
+                                }
+                                DataRow dr = dtNominalSize2.NewRow();
+                                strnominalSize2 = dtgetNominalSize2.Rows[j]["size"].ToString();
+                                dr[0] = strnominalSize2;
+                                if (withdata == "withdata")
+                                {
+                                    dr[1] = dtgetNominalSize2.Rows[j]["observed"].ToString();
+                                    dr[2] = dtgetNominalSize2.Rows[j]["variation"].ToString();
+                                }
+                                else
+                                {
+                                    dr[1] = "";
+                                    dr[2] = "";
+                                }
+                                dtNominalSize2.Rows.Add(dr);
+                                ViewState["dtNominalSize2"] = dtNominalSize2;
+                            }
+                        }
 
 
-                         //DataTable dtcust = new DataTable();
+                        if (dtNominalSize2.Rows.Count > 0)
+                        {
+                            ReportDataSource src4 = new ReportDataSource("DataSet4", dtNominalSize2);
+                            ReportViewer1.LocalReport.DataSources.Add(src4);
+                        }
+
+
+                        //DataTable dtcust = new DataTable();
                         //dtcust = g.GetCustomerDetails(Convert.ToInt32(Session["Customer_ID"]));
                         //ReportDataSource repcust = new ReportDataSource("DataSetcust", dtcust);
                         //ReportViewer1.LocalReport.DataSources.Add(repcust);
